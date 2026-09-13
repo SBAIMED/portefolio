@@ -1,15 +1,336 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA_ compatible" content="IE=edge">
-        <meta name="viewport"
-         content="width=device-width, initiale-scale=1.0">
-        <title>Document</title>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Évaluation diagnostique – 2BAC Sciences Physiques</title>
 
+<!-- Intégration de MathJax pour le rendu du LaTeX -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    </head>
-    <body>
-    <h1>Mon portfolio</h1>
-    </body>
-</html>
+<style>
+:root{--blue:#1769aa;--blue2:#4aa3df;--teal:#087f7b;--teal2:#1a9c94;--red:#c83e3e;--red2:#e47a36;--green:#1f9d55;--orange:#e08b18;--bg:#f2f5f8;--card:#fff;--ink:#253746;--line:#d9e0e6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Segoe UI,Arial,sans-serif;line-height:1.5}
+.app{max-width:1180px;margin:18px auto;padding:18px}
+header{background:linear-gradient(135deg,#123c5a,#2783b8);color:#fff;border-radius:16px;padding:25px;text-align:center;box-shadow:0 8px 25px #0002}
+header h1{margin:0 0 5px;font-size:1.75rem} header p{margin:0;opacity:.92}
+.rule{background:#fff3d6;border:1px solid #f0d38b;color:#7a5900;border-radius:9px;padding:10px 14px;margin:14px 0;font-size:.92rem;font-weight:700;text-align:center}
+.student{background:var(--card);padding:18px;border-radius:12px;margin:18px 0;display:flex;gap:15px;flex-wrap:wrap;justify-content:center;box-shadow:0 2px 8px #0000000d}
+.student label{font-weight:700}.student input{padding:9px 12px;border:2px solid var(--line);border-radius:7px;font-size:1rem;min-width:210px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.tabs button{flex:1;min-width:170px;padding:12px;border:0;border-radius:9px;background:#fff;font-weight:700;cursor:pointer;box-shadow:0 2px 6px #0001}.tabs button.active{background:var(--blue);color:#fff}
+.panel{display:none}.panel.active{display:block}
+.section{margin:26px 0 15px;padding:13px;border-radius:9px;color:#fff;text-align:center;font-size:1.3rem;font-weight:800}
+.meca{background:linear-gradient(90deg,var(--blue),var(--blue2))}.elec{background:linear-gradient(90deg,var(--teal),var(--teal2))}.chimie{background:linear-gradient(90deg,var(--red),var(--red2))}
+.exhead{margin:22px 0 6px;padding:8px 0 8px 12px;font-weight:800;font-size:1.05rem;border-left:5px solid var(--blue)}
+.exhead.elecEx{border-color:var(--teal)}.exhead.chimieEx{border-color:var(--red)}
+.pres{background:#eef4fa;border:1px dashed #b7c9d8;border-radius:9px;padding:12px 15px;margin:6px 0 16px;font-size:.93rem;color:#3a4d5c}
+.pres b{color:#1769aa}
+.q{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin:13px 0;box-shadow:0 2px 7px #00000009}.qhead{display:flex;gap:10px;align-items:flex-start;font-weight:700}.num{width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;flex:0 0 32px;font-size:.95rem}.elecQ .num{background:var(--teal)}.chimieQ .num{background:var(--red)}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin-top:12px}.option{border:2px solid transparent;background:#f7f9fb;padding:10px;border-radius:8px;cursor:pointer;display:flex;align-items:center}.option:hover{border-color:#b8c7d3}.option input{margin-right:8px;transform:scale(1.15)}.correct{background:#dff4e6!important;border-color:var(--green)!important}.wrong{background:#fde1e1!important;border-color:var(--red)!important}.missed{background:#fff0cf!important;border-color:var(--orange)!important}
+
+/* Correction ciblée uniquement pour la question 27 */
+#q27 .options {
+  display: grid; 
+  grid-template-columns:repeat(2, 1fr);
+  gap: 10px;
+}
+
+.svgbox{margin:10px 0 4px;padding:8px;text-align:center;overflow:auto;background:#fafcfd;border-radius:8px}.svgbox svg, .svgbox img{max-width:100%;height:auto;max-height:280px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0}.primary,.secondary,.danger{border:0;border-radius:9px;padding:13px 18px;font-weight:800;cursor:pointer}.primary{background:var(--green);color:#fff;flex:1}.secondary{background:var(--blue);color:#fff}.danger{background:#c0392b;color:#fff}
+.result{display:none;background:#fff;border-radius:14px;padding:22px;margin:20px 0;box-shadow:0 8px 25px #0001}.score{font-size:2rem;text-align:center;font-weight:900}
+.masteryline{text-align:center;font-weight:800;padding:8px;border-radius:8px;margin:10px 0}.masteryline.ok{background:#dff4e6;color:#176b38}.masteryline.no{background:#fde1e1;color:#8c2020}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:15px}.stat{background:#f7f9fb;border-radius:9px;padding:14px;text-align:center}.stat b{font-size:1.3rem}.stat span.ok{color:var(--green)}.stat span.no{color:var(--red)}
+.exdetail{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}.exrow{display:flex;justify-content:space-between;gap:8px;padding:7px 4px;border-bottom:1px dashed var(--line);font-size:.9rem}.exrow b{min-width:26px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center;font-size:.92rem}th{background:#29475a;color:#fff}
+.badge{padding:4px 9px;border-radius:15px;font-weight:700;font-size:.85rem}.good{background:#dff4e6;color:#176b38}.mid{background:#fff0cf;color:#8a5b00}.low{background:#fde1e1;color:#8c2020}
+.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:15px}.modal.on{display:flex}.modal>div{background:#fff;max-width:760px;width:100%;max-height:88vh;overflow:auto;border-radius:12px;padding:22px}
+small.note{display:block;color:#687782;margin-top:7px}
+.qbar{display:flex;gap:8px;align-items:center;margin:7px 0;font-size:.86rem}.qbar b{width:200px;flex:0 0 200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qbar .track{height:20px;background:#e7edf1;border-radius:5px;flex:1;overflow:hidden}.qbar .fill{height:100%;text-align:right;padding:1px 7px;color:#fff;font-weight:700;font-size:.78rem}
+@media print{.tabs,.actions,.student{display:none}}
+@media(max-width:600px){.app{padding:10px}header h1{font-size:1.3rem}.options{grid-template-columns:1fr}.student input{width:100%}.qbar b{width:110px;flex-basis:110px;font-size:.78rem}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<h1>Évaluation diagnostique – Physique-Chimie</h1>
+<p>Lycée Qualifiant Sidi Moussa - Taroudant</p>
+<p>2ème Bac Sciences Physiques • Version interactive</p>
+<p> Pr. SBAI Mohammed </p>
+
+</header>
+
+<div class="rule">⚠️ Chaque question comporte une seule bonne réponse. Coche la bonne réponse.</div>
+
+<div class="student">
+<div><label>Nom complet :</label> <input id="name" placeholder="Nom de l'élève"></div>
+<div><label>Classe :</label> <input id="classe" placeholder="Ex. 2BAC PC"></div>
+</div>
+
+<div class="tabs">
+<button class="active" onclick="tab('quiz',this)">📝 Évaluation</button>
+<button onclick="tab('dash',this)">📊 Résultats de la classe</button>
+<button onclick="tab('ana',this)">📈 Analyse diagnostique</button>
+</div>
+
+<section id="quiz" class="panel active"><div id="quizBox"></div>
+<div class="actions"><button class="primary" onclick="submitQuiz()">Valider et corriger</button><button class="secondary" onclick="window.print()">🖨️ Imprimer</button></div>
+<div class="result" id="result"></div></section>
+
+<section id="dash" class="panel">
+<h2>Résultats des élèves</h2>
+<p>Les résultats sont conservés localement dans le navigateur de l'appareil.</p>
+<div style="overflow:auto"><table><thead><tr><th>Nom</th><th>Classe</th><th>Score</th><th>%</th><th>Méca.</th><th>Élec.</th><th>Chimie</th><th>Maîtrise</th><th>Date</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="actions"><button class="danger" onclick="clearData()">🗑️ Effacer les résultats</button></div>
+</section>
+
+<section id="ana" class="panel">
+<h2>Analyse diagnostique</h2><div class="stats" id="analysis"></div>
+<div style="margin-top:22px"><h3>Taux de réussite par élève</h3><div id="bars"></div></div>
+<div style="margin-top:22px"><h3>Taux de réussite par question <small style="font-weight:400;color:#687782">(les plus faibles en premier — prérequis à consolider)</small></h3><div id="qbars"></div></div>
+</section>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div><button style="float:right" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+
+<script>
+const KEY="eval_diag_2bac_pc_v1";
+
+/* ---------- Figures SVG ---------- */
+function svgTicker(){
+  return `<img src="images/enregistrement.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 40%; height: auto;">`;
+}
+function svgIncline(){
+  return `<img src="images/mvt translation incliner.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 40%; height: auto;">`;
+}
+function svgRotDisk(){
+  return `<img src="images/mvt de rotation.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 30%; height: auto;">`;
+}
+function svgCircuit2(){
+  return `<img src="images/circuit electrique.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 30%; height: auto;">`;
+}
+function svgOscillo(){
+  return `<img src="images/oscilloscope.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 30%; height: auto;">`;
+}
+function svgTitration(){
+  return `<img src="images/montage titrage.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 40%; height: auto;">`;
+}
+function svgAlkane(){
+  return `<img src="images/hydrocarbure.png" alt="Enregistrement du mouvement du centre d'inertie" style="max-width: 20%; height: auto;">`;
+}
+
+/* ---------- Data ---------- */
+const DATA=[
+{key:"meca",label:"⚙️ Mécanique",cls:"meca",exercises:[
+ {title:"Exercice 1 : Calcul de vitesse et principe d'inertie",
+  pres:"On étudie l'enregistrement du mouvement du centre d'inertie G d'un autoporteur sur une table horizontale. La durée entre deux marquages successifs est \\(\\tau = 40\\text{ ms}\\). Distance mesurée : \\(M_1M_3 = 4,8\\text{ cm}\\).",
+  fig:svgTicker(),
+  qs:[
+   {t:"La valeur de la vitesse instantanée \\(V_2\\) au point \\(M_2\\) est :",o:["0,6 m/s","1,2 m/s","0,06 m/s","6 m/s"],a:0},
+   {t:"Si la vitesse du centre d'inertie est constante (\\(\\vec{V} = \\text{Cte}\\)), d'après le principe d'inertie, la somme des forces appliquées vérifie :",o:["\\(\\sum \\vec{F} = \\vec{P}\\)","\\(\\sum \\vec{F} \\neq \\vec{0}\\)","\\(\\sum \\vec{F} = \\vec{0}\\)","\\(\\sum \\vec{F} = m \\cdot \\vec{g}\\)"],a:2},
+   {t:"L'autoporteur étant soumis uniquement à son poids \\(\\vec{P}\\) et à l'action de la table \\(\\vec{R}\\), on déduit que :",o:["Le contact se fait avec des frottements importants.","\\(\\vec{R}\\) est perpendiculaire au plan, les frottements sont nuls.","L'action de la table est dirigée vers le bas.","La force de poussée d'Archimède est prédominante."],a:1}
+  ]},
+ {title:"Exercice 2 : Mouvement de translation et énergie",
+  pres:"Un solide (S) de masse \\(m = 2\\text{ kg}\\) glisse en translation rectiligne d'un point A (altitude \\(z_A = 5\\text{ m}\\)) vers un point B (altitude \\(z_B = 1\\text{ m}\\)). Il part de A sans vitesse initiale (\\(V_{\\text{A}} = 0\\)). \\(g = 10\\text{ N/kg}\\).",
+  fig:svgIncline(),
+  qs:[
+   {t:"Le travail du poids \\(W_{\\text{AB}}(\\vec{P})\\) lors du déplacement de A vers B est :",o:["−80 J","100 J","80 J","40 J"],a:2},
+   {t:"La variation de l'énergie potentielle de pesanteur \\(\\Delta E_{\\text{pp}}\\) du solide entre A et B est :",o:["−80 J","80 J","0 J","10 J"],a:0},
+   {t:"Si les frottements sont négligeables, l'énergie cinétique \\(E_{\\text{cB}}\\) au point B est :",o:["40 J","0 J","80 J","100 J"],a:2},
+   {t:"La vitesse du solide \\(V_{\\text{B}}\\) au point B, dans le cas sans frottement, est environ :",o:["8,94 m/s","40 m/s","6,32 m/s","80 m/s"],a:0},
+   {t:"Si en réalité, l'énergie cinétique au point B est \\(E_{\\text{cB}} = 60\\text{ J}\\), le travail de la force de frottement \\(W_{\\text{AB}}(\\vec{f})\\) vaut :",o:["20 J","−20 J","−140 J","60 J"],a:1}
+  ]},
+ {title:"Exercice 3 : Mouvement de rotation et énergie",
+  pres:"Un disque homogène de rayon \\(R = 10\\text{ cm}\\) et de moment d'inertie \\(J_{\\Delta} = 2 \\times 10^{-2}\\text{ kg}\\cdot\\text{m}^2\\) tourne autour d'un axe fixe sous l'action d'une force motrice constante \\(\\vec{F}\\) de valeur \\(F = 5\\text{ N}\\), tangente au disque.",
+  fig:svgRotDisk(),
+  qs:[
+   {t:"Le moment de la force motrice \\(\\vec{F}\\) par rapport à l'axe de rotation est :",o:["0,5 N.m","50 N.m","5 N.m","0,05 N.m"],a:0},
+   {t:"Si le disque tourne à la vitesse angulaire \\(\\omega = 10\\text{ rad/s}\\), son énergie cinétique \\(E_{\\text{c}}\\) est :",o:["1 J","2 J","0,5 J","10 J"],a:0},
+   {t:"La vitesse linéaire \\(V\\) d'un point situé à la périphérie du disque est :",o:["1 m/s","10 m/s","0,1 m/s","100 m/s"],a:0},
+   {t:"La puissance \\(P\\) développée par la force motrice \\(\\vec{F}\\) à cet instant est :",o:["0,5 W","5 W","50 W","1 W"],a:1},
+   {t:"Le travail effectué par cette force \\(\\vec{F}\\) lorsque le disque effectue exactement un tour complet est :",o:["π J (environ 3,14 J)","0,5 J","2π J","10 J"],a:0}
+  ]}
+]},
+{key:"elec",label:"⚡ Électricité",cls:"elec",exercises:[
+ {title:"Exercice 1 : Lois d'additivité, des nœuds et association",
+  pres:"Un générateur fournit une tension \\(E\\), alimentant une branche principale de courant \\(I = 0,6\\text{ A}\\). Cette branche se divise en deux résistances en parallèle \\(R_1 = 20\\ \\Omega\\) et \\(R_2 = 20\\ \\Omega\\), suivies en série d'une résistance \\(R_3 = 10\\ \\Omega\\).",
+  fig:svgCircuit2(),
+  qs:[
+   {t:"La résistance équivalente \\(R_{12}\\) de l'association en parallèle de \\(R_1\\) et \\(R_2\\) est :",o:["40 Ω","10 Ω","20 Ω","5 Ω"],a:1},
+   {t:"La résistance équivalente totale \\(R_{\\text{éq}}\\) du circuit est :",o:["20 Ω","50 Ω","10 Ω","30 Ω"],a:0},
+   {t:"D'après la loi d'Ohm, la tension totale délivrée par le générateur \\(E\\) est :",o:["6 V","12 V","30 V","20 V"],a:1},
+   {t:"La tension \\(U_3\\) aux bornes du conducteur ohmique \\(R_3\\) est :",o:["10 V","6 V","12 V","20 V"],a:1},
+   {t:"En appliquant la loi des nœuds, le courant \\(I_1\\) traversant \\(R_1\\) vaut :",o:["0,6 A","0,3 A","1,2 A","0,15 A"],a:1}
+  ]},
+ {title:"Exercice 2 : Énergie et puissance d'un générateur",
+  pres:"Un générateur de tension continue de force électromotrice \\(E = 12\\text{ V}\\) et de résistance interne \\(r = 2\\ \\Omega\\) débite un courant constant d'intensité \\(I = 1,5\\text{ A}\\) dans un circuit extérieur.",
+  qs:[
+   {t:"La tension \\(U_{\\text{PN}}\\) mesurée aux bornes de ce générateur est :",o:["15 V","9 V","12 V","3 V"],a:1},
+   {t:"La puissance utile \\(P_{\\text{u}}\\) fournie par le générateur au reste du circuit est :",o:["18 W","13,5 W","4,5 W","12 W"],a:1},
+   {t:"La puissance dissipée par effet Joule \\(P_{\\text{J}}\\) à l'intérieur du générateur est :",o:["3 W","2 W","4,5 W","1,5 W"],a:2},
+   {t:"Le rendement global \\(\\rho\\) de ce générateur se calcule par le rapport :",o:["\\(\\rho = U_{\\text{PN}} / E\\)","\\(\\rho = E / U_{\\text{PN}}\\)","\\(\\rho = r \\cdot I / E\\)","\\(\\rho = P_{\\text{J}} / P_{\\text{u}}\\)"],a:0}
+  ]},
+ {title:"Exercice 3 : Mesures (Tension, Période et Fréquence)",
+  pres:"La figure représente l'oscillogramme d'une tension alternative sinusoïdale. Réglages : sensibilité verticale \\(S_{\\text{v}} = 4\\text{ V/div}\\), sensibilité horizontale (balayage) \\(S_{\\text{h}} = 5\\text{ ms/div}\\). Le motif s'étend verticalement sur 3 divisions et la période occupe 4 divisions.",
+  fig:svgOscillo(),
+  qs:[
+   {t:"La valeur de la tension maximale \\(U_{\\text{max}}\\) de ce signal est :",o:["12 V","4 V","3 V","15 V"],a:0},
+   {t:"La valeur de la tension efficace \\(U_{\\text{eff}}\\) mesurable avec un voltmètre est d'environ :",o:["8,48 V","16,9 V","12 V","6 V"],a:0},
+   {t:"La période \\(T\\) du signal visualisé vaut :",o:["20 ms","5 ms","12 ms","15 ms"],a:0},
+   {t:"La fréquence \\(f\\) correspondante à ce signal alternatif est :",o:["50 Hz","20 Hz","500 Hz","0,05 Hz"],a:0}
+  ]}
+]},
+{key:"chimie",label:"⚗️ Chimie",cls:"chimie",exercises:[
+ {title:"Exercice 1 : Réaction acido-basique et dosage",
+  pres:"On réalise le dosage d'un volume \\(V_{\\text{A}} = 20\\text{ mL}\\) d'une solution d'acide chlorhydrique (\\(\\text{H}_3\\text{O}^+ + \\text{Cl}^-\\)) de concentration \\(C_{\\text{A}}\\) inconnue, par une solution d'hydroxyde de sodium (\\(\\text{Na}^+ + \\text{HO}^-\\)) de concentration \\(C_{\\text{B}} = 0,1\\text{ mol/L}\\). Le volume versé à l'équivalence est \\(V_{\\text{BE}} = 15\\text{ mL}\\).",
+  fig:svgTitration(),
+  qs:[
+   {
+    t: "L'équation chimique de la réaction support de ce dosage acido-basique est :",
+    o: [
+      "\\(\\text{H}_3\\text{O}^+_{\\text{(aq)}} + \\text{HO}^-_{\\text{(aq)}} \\rightarrow 2\\,\\text{H}_2\\text{O}_{\\text{(l)}}\\)",
+      "\\(\\text{Na}^+_{\\text{(aq)}} + \\text{Cl}^-_{\\text{(aq)}} \\rightarrow \\text{NaCl}_{\\text{(s)}}\\)",
+      "\\(\\text{H}_3\\text{O}^+_{\\text{(aq)}} - \\text{HO}^-_{\\text{(aq)}} \\rightarrow 2\\,\\text{H}_2\\text{O}_{\\text{(l)}}\\)",
+      "\\(\\text{HCl}_{\\text{(aq)}} + \\text{NaOH}_{\\text{(aq)}} \\rightarrow \\text{H}_2\\text{O}_{\\text{(l)}} + \\text{Na}^+_{\\text{(aq)}}\\)"
+    ],
+    a: 0
+   },
+   {t:"Lors de ce titrage colorimétrique, le repérage de l'équivalence est détecté par :",o:["Le changement de couleur de l'indicateur coloré.","Un dégagement important de gaz.","L'apparition d'un précipité blanc.","L'évaporation totale de la solution."],a:0},
+   {t:"À l'équivalence, la relation entre les quantités de matière introduites est :",o:["\\(C_{\\text{A}} \\times V_{\\text{A}} = C_{\\text{B}} \\times V_{\\text{BE}}\\)","\\(C_{\\text{A}} \\times C_{\\text{B}} = V_{\\text{A}} \\times V_{\\text{BE}}\\)","\\(C_{\\text{A}} + V_{\\text{A}} = C_{\\text{B}} + V_{\\text{BE}}\\)","\\(C_{\\text{A}} = C_{\\text{B}} \\times V_{\\text{BE}}\\)"],a:0},
+   {t:"La valeur calculée de la concentration \\(C_{\\text{A}}\\) de l'acide chlorhydrique est :",o:["0,075 mol/L","0,15 mol/L","0,133 mol/L","1,5 mol/L"],a:0}
+  ]},
+ {title:"Exercice 2 : Oxydoréduction, conductivité et avancement",
+  pres:"On étudie la réaction entre 0,02 mol de zinc (Zn) solide et un volume \\(V = 100\\text{ mL}\\) d'une solution contenant 0,05 mol d'ions \\(\\text{H}^+\\). La réaction produit des ions \\(\\text{Zn}^{2+}_{\\text{(aq)}}\\) et du dihydrogène \\(\\text{H}_{2\\text{(g)}}\\). Volume molaire \\(V_{\\text{m}} = 24\\text{ L/mol}\\).",
+  qs:[
+   {t:"Dans cette réaction d'oxydoréduction, l'espèce chimique qui joue le rôle d'oxydant est :",o:["\\(\\text{H}^+_{\\text{(aq)}}\\) car il capte des électrons.","\\(\\text{Zn}_{\\text{(s)}}\\) car il cède des électrons.","\\(\\text{Zn}^{2+}_{\\text{(aq)}}\\)","\\(\\text{H}_{2\\text{(g)}}\\)"],a:0},
+   {t:"Pour déterminer l'avancement maximal \\(x_{\\text{max}}\\), on compare les valeurs hypothétiques :",o:["\\(x = 0,02\\text{ mol}\\) (pour Zn) et \\(x = 0,025\\text{ mol}\\) (pour H⁺)","\\(x = 0,02\\text{ mol}\\) (pour Zn) et \\(x = 0,05\\text{ mol}\\) (pour H⁺)","\\(x = 0,04\\text{ mol}\\) (pour Zn) et \\(x = 0,025\\text{ mol}\\) (pour H⁺)","\\(x = 0,01\\text{ mol}\\) (pour Zn) et \\(x = 0,05\\text{ mol}\\) (pour H⁺)"],a:0},
+   {t:"La valeur finale de l'avancement maximal \\(x_{\\text{max}}\\) et le réactif limitant sont :",o:["\\(x_{\\text{max}} = 0,02\\text{ mol}\\) ; réactif limitant : le zinc (Zn).","\\(x_{\\text{max}} = 0,025\\text{ mol}\\) ; réactif limitant : les ions H⁺.","\\(x_{\\text{max}} = 0,05\\text{ mol}\\) ; réactif limitant : les ions H⁺.","Il n'y a pas de réactif limitant."],a:0},
+   {t:"Le volume maximum de gaz dihydrogène \\(V(\\text{H}_2)\\) dégagé à la fin de la réaction sera de :",o:["0,48 L","0,24 L","0,60 L","1,2 L"],a:0},
+   {t:"La conductivité \\(\\sigma\\) de la solution se calcule par la relation \\(\\sigma = \\sum \\lambda_i [X_i]\\). L'unité légale de la conductivité \\(\\sigma\\) est :",o:["S.m⁻¹ (Siemens par mètre)","S.m².mol⁻¹","Ω.m⁻¹","V.A⁻¹"],a:0}
+  ]},
+ {title:"Exercice 3 : Constituants de la matière",
+  pres:"On analyse le noyau de l'isotope du Carbone 14, utilisé pour la datation. Son symbole chimique complet est \\(^{14}_{6}\\text{C}\\).",
+  qs:[
+   {t:"La composition exacte du noyau de cet atome de Carbone 14 est :",o:["6 protons et 8 neutrons.","6 protons et 14 neutrons.","14 protons et 6 neutrons.","8 protons et 6 neutrons."],a:0},
+   {t:"Deux atomes sont dits « isotopes » s'ils possèdent le même :",o:["Numéro atomique Z mais des nombres de nucléons A différents.","Nombre de masse A mais des numéros atomiques Z différents.","Nombre de neutrons mais des nombres de protons différents.","Nombre de masse A et même numéro atomique Z."],a:0},
+   {t:"La structure électronique de l'atome de Carbone (Z = 6) à l'état fondamental est :",o:["(K)²(L)⁴","(K)²(L)⁸(M)⁴","(K)⁶","(K)²(L)²(M)²"],a:0}
+  ]},
+ {title:"Exercice 4 : Nomenclature des alcanes",
+  pres:"La chimie organique étudie principalement les composés du carbone. On considère un alcane ramifié dont la chaîne principale contient 4 atomes de carbone et possède un groupement alkyle sur le carbone numéro 2.",
+  fig:svgAlkane(),
+  qs:[
+   {t:"La formule brute générale des alcanes acycliques est :",o:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CₙH₂ₙ₊₁OH"],a:0},
+   {t:"Le nom de cette molécule dans la nomenclature officielle (IUPAC) est :",o:["Le 2-méthylbutane.","Le 3-méthylbutane.","Le pentane.","Le 2-éthylpropane."],a:0}
+  ]}
+]}
+];
+
+/* ---------- Flatten + thresholds ---------- */
+function thr(n){return Math.round(n*0.75)}
+let Q=[],EX=[],qn=1;
+DATA.forEach(part=>{
+ part.exercises.forEach(ex=>{
+  let start=qn;
+  ex.qs.forEach(q=>{
+    Q.push({
+      n:qn,
+      part:part.key,
+      exIdx:EX.length,
+      t:q.t,
+      o:q.o,
+      a:q.a
+    });
+    qn++;
+  });
+  EX.push({idx:EX.length,part:part.key,title:ex.title,start:start,end:qn-1,count:ex.qs.length,thr:thr(ex.qs.length)});
+ });
+});
+const PART_COUNT={};DATA.forEach(p=>{PART_COUNT[p.key]=EX.filter(e=>e.part===p.key).reduce((s,e)=>s+e.count,0)});
+const PART_THR={};Object.keys(PART_COUNT).forEach(k=>PART_THR[k]=thr(PART_COUNT[k]));
+const GLOBAL_THR=thr(Q.length);
+
+/* ---------- Render quiz ---------- */
+function render(){
+let out="";
+DATA.forEach(part=>{
+ out+=`<div class="section ${part.cls}">${part.label}</div>`;
+ part.exercises.forEach((ex,exi)=>{
+  let exMeta=EX.find(e=>e.part===part.key&&e.title===ex.title);
+  let hcls=part.key==="elec"?"elecEx":part.key==="chimie"?"chimieEx":"";
+  out+=`<div class="exhead ${hcls}">${ex.title}</div>`;
+  out+=`<div class="pres"><b>Données :</b> ${ex.pres}</div>`;
+  if(ex.fig)out+=`<div class="svgbox">${ex.fig}</div>`;
+  Q.filter(q=>q.exIdx===exMeta.idx).forEach(q=>{
+   out+=`<div class="q ${part.key}Q" id="q${q.n}"><div class="qhead"><span class="num">${q.n}</span><span>${q.t}</span></div><div class="options">`;
+   (q.o || []).forEach((x,i)=>out+=`<label class="option" id="o${q.n}_${i}"><input type="radio" name="q${q.n}" value="${i}"><span>${x}</span></label>`);
+   out+=`</div></div>`;
+  });
+ });
+});
+document.getElementById("quizBox").innerHTML=out;
+
+if(window.MathJax) {
+  MathJax.typesetPromise();
+}
+}
+
+function tab(id,b){document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");b.classList.add("active");if(id==="dash")dashboard();if(id==="ana")analysis();}
+function getData(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+
+function submitQuiz(){
+let name=document.getElementById("name").value.trim();if(!name){alert("Veuillez saisir le nom de l'élève.");return}
+let cls=document.getElementById("classe").value.trim(),total=0,by={meca:0,elec:0,chimie:0},exScore={},answers={};
+EX.forEach(e=>exScore[e.idx]=0);
+Q.forEach(q=>{
+ let sel=document.querySelector(`input[name="q${q.n}"]:checked`);let s=sel?+sel.value:null;answers[q.n]=s;
+ let ok=s===q.a;
+ (q.o || []).forEach((_,i)=>{let l=document.getElementById(`o${q.n}_${i}`);l.classList.remove("correct","wrong","missed");if(i===q.a)l.classList.add("correct");if(s===i&&i!==q.a)l.classList.add("wrong");document.querySelector(`#o${q.n}_${i} input`).disabled=true});
+ if(ok){total++;by[q.part]++;exScore[q.exIdx]++}
+});
+let pct=Math.round(total/Q.length*100),globalOk=total>=GLOBAL_THR;
+let r={name,class:cls,total,pct,by,exScore,answers,date:new Date().toLocaleString("fr-FR")};
+let data=getData().filter(x=>!(x.name===name&&x.class===cls));data.push(r);localStorage.setItem(KEY,JSON.stringify(data));
+
+let exHtml=EX.map(e=>{let s=exScore[e.idx],ok=s>=e.thr;return `<div class="exrow"><span><b>${s}/${e.count}</b> ${e.title}</span><span>${ok?"✅":"⚠️"} seuil ${e.thr}</span></div>`}).join("");
+document.getElementById("result").style.display="block";
+document.getElementById("result").innerHTML=`<div class="score">${total} / ${Q.length} — ${pct}%</div>
+<div class="masteryline ${globalOk?"ok":"no"}">${globalOk?"✅ Seuil de maîtrise global atteint":"⚠️ Seuil de maîtrise global non atteint"} (${GLOBAL_THR}/${Q.length} requis)</div>
+<div class="stats">
+<div class="stat"><b>${by.meca}/${PART_COUNT.meca}</b><br>Mécanique <span class="${by.meca>=PART_THR.meca?"ok":"no"}">${by.meca>=PART_THR.meca?"✅":"⚠️"}</span></div>
+<div class="stat"><b>${by.elec}/${PART_COUNT.elec}</b><br>Électricité <span class="${by.elec>=PART_THR.elec?"ok":"no"}">${by.elec>=PART_THR.elec?"✅":"⚠️"}</span></div>
+<div class="stat"><b>${by.chimie}/${PART_COUNT.chimie}</b><br>Chimie <span class="${by.chimie>=PART_THR.chimie?"ok":"no"}">${by.chimie>=PART_THR.chimie?"✅":"⚠️"}</span></div>
+</div>
+<div class="exdetail"><b>Détail par exercice</b>${exHtml}</div>
+<small class="note">🟢 Réponse correcte • 🔴 réponse incorrecte cochée</small>`;
+dashboard();analysis();
+window.scrollTo({top:document.getElementById("result").offsetTop-20,behavior:"smooth"});
+}
+
+function dashboard(){
+let data=getData().sort((a,b)=>b.total-a.total),tb=document.getElementById("tbody");tb.innerHTML="";
+data.forEach((r,i)=>{let cl=r.pct>=70?"good":r.pct>=50?"mid":"low";let mOk=r.total>=GLOBAL_THR;
+tb.innerHTML+=`<tr><td><b>${r.name}</b></td><td>${r.class||"-"}</td><td><span class="badge ${cl}">${r.total}/${Q.length}</span></td><td>${r.pct}%</td><td>${r.by.meca}</td><td>${r.by.elec}</td><td>${r.by.chimie}</td><td>${mOk?"✅":"⚠️"}</td><td>${r.date}</td><td><button onclick="detail(${i})">Détail</button></td></tr>`})
+}
+function detail(i){
+let r=getData().sort((a,b)=>b.total-a.total)[i];document.getElementById("modalTitle").textContent=`${r.name} — ${r.total}/${Q.length} (${r.pct}%)`;
+let h=`<p><b>Mécanique:</b> ${r.by.meca}/${PART_COUNT.meca} • <b>Électricité:</b> ${r.by.elec}/${PART_COUNT.elec} • <b>Chimie:</b> ${r.by.chimie}/${PART_COUNT.chimie}</p><hr>`;
+Q.forEach(q=>{let s=r.answers[q.n],ok=s===q.a;h+=`<p><b>Q${q.n}</b> ${ok?"✅":"❌"} — ${s!==null&&s!==undefined?q.o[s]:"Aucune réponse"}${!ok?` <i>(correcte : ${q.o[q.a]})</i>`:""}</p>`});
+document.getElementById("modalBody").innerHTML=h;document.getElementById("modal").classList.add("on");
+if(window.MathJax) MathJax.typesetPromise();
+}
+function closeModal(){document.getElementById("modal").classList.remove("on")}
+function clearData(){if(confirm("Effacer tous les résultats enregistrés sur cet appareil ?")){localStorage.removeItem(KEY);dashboard();analysis()}}
+
+function analysis(){
+let d=getData(),a=document.getElementById("analysis"),b=document.getElementById("bars"),qb=document.getElementById("qbars");
+if(!d.length){a.innerHTML="<div class='stat'>Aucune donnée</div>";b.innerHTML="";qb.innerHTML="";return}
+let avg=(d.reduce((s,r)=>s+r.pct,0)/d.length).toFixed(1),best=Math.max(...d.map(r=>r.pct)),masteredN=d.filter(r=>r.total>=GLOBAL_THR).length;
+a.innerHTML=`<div class="stat"><b>${d.length}</b><br>Élèves</div><div class="stat"><b>${avg}%</b><br>Moyenne</div><div class="stat"><b>${best}%</b><br>Meilleur taux</div><div class="stat"><b>${masteredN}/${d.length}</b><br>Ont atteint le seuil (${GLOBAL_THR}/${Q.length})</div>`;
+b.innerHTML=d.sort((x,y)=>y.pct-x.pct).map(r=>`<div class="qbar"><b>${r.name}</b><div class="track"><div class="fill" style="width:${r.pct}%;background:linear-gradient(90deg,#1769aa,#4aa3df)">${r.pct}%</div></div></div>`).join("");
+let qstats=Q.map(q=>{let ok=d.filter(r=>r.answers[q.n]===q.a).length;return {n:q.n,t:q.t,pct:Math.round(ok/d.length*100)}}).sort((x,y)=>x.pct-y.pct);
+qb.innerHTML=qstats.map(s=>{let col=s.pct>=75?"#1f9d55":s.pct>=50?"#e08b18":"#c83e3e";return `<div class="qbar"><b title="${s.t}">Q${s.n} — ${s.t.length>28?s.t.slice(0,28)+"…":s.t}</b><div class="track"><div class="fill" style="width:${s.pct}%;background:${col}">${s.pct}%</div></div></div>`}).join("");
+if(window.MathJax) MathJax.typesetPromise();
+}
+window.onload=render;
+</script>
+</body></html>
